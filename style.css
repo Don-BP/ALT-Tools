@@ -1,0 +1,1501 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #2a75bb;
+    --secondary-color: #f4f4f4;
+    --team1-color: #2a75bb; /* Blue */
+    --team2-color: #d9534f; /* Red */
+    --team3-color: #5cb85c; /* Green */
+    --team4-color: #f0ad4e; /* Orange/Yellow */
+    --text-color: #333;
+    --border-radius: 8px;
+}
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+header {
+    position: relative; /* For mute button positioning */
+    text-align: center;
+    margin-bottom: 2em;
+    padding: 1em 1em 0 1em;
+    width: 100%;
+    max-width: 1600px;
+}
+header h1 {
+    color: var(--primary-color);
+    margin: 0;
+}
+.tool-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2em;
+    width: 100%;
+    max-width: 1600px;
+    padding: 1em;
+}
+.tool-card {
+    position: relative; /* Needed for absolute positioning of the fullscreen button */
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 1.5em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.tool-card h2 {
+    margin-top: 0;
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--secondary-color);
+    padding-bottom: 0.5em;
+    width: 100%;
+    text-align: center;
+}
+button, .button-like-label {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin: 5px;
+    display: inline-block; /* For label */
+    text-align: center;
+}
+button:hover, .button-like-label:hover {
+    background-color: #1e5a94;
+}
+button:disabled {
+    background-color: #999;
+    cursor: not-allowed;
+}
+
+/* --- Random Name Picker --- */
+.name-picker-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    flex-grow: 1;
+}
+.tool-card.fullscreen-mode .name-picker-content {
+    flex-direction: row;
+    gap: 2em;
+    align-items: center;
+}
+.name-picker-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+.class-list-manager {
+    display: flex;
+    width: 90%;
+    gap: 10px;
+    margin-bottom: 0.5em;
+    align-items: center;
+}
+.class-list-manager select {
+    flex-grow: 1;
+    padding: 5px;
+    border-radius: 5px;
+}
+#delete-class-btn {
+    padding: 5px 10px;
+    background-color: #d9534f; /* Red for delete */
+    min-width: auto;
+    font-size: 1.2em;
+    line-height: 1;
+}
+#delete-class-btn:hover {
+    background-color: #c9302c;
+}
+.name-picker-controls {
+    display: flex;
+    gap: 10px;
+}
+.name-picker-options {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9em;
+    margin-top: 10px;
+}
+.hidden {
+    display: none !important; /* Use important to override other display properties if needed */
+}
+#picked-names-container {
+    width: 90%;
+    margin-top: 1em;
+    text-align: left;
+}
+#picked-names-container h4 {
+    margin: 0 0 0.5em 0;
+    color: var(--primary-color);
+}
+#picked-names-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    max-height: 100px;
+    overflow-y: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+#picked-names-list li {
+    background-color: var(--secondary-color);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+#name-list {
+    width: 90%;
+    height: 100px;
+    margin-bottom: 1em;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+.tool-card.fullscreen-mode .name-picker-panel {
+    flex-basis: 400px;
+    flex-shrink: 0;
+    height: 100%;
+}
+.tool-card.fullscreen-mode #name-list {
+    flex-grow: 1;
+}
+#picked-name {
+    font-size: 4.5em;
+    font-weight: bold;
+    color: #d9534f;
+    min-height: 60px;
+    text-align: center;
+    margin: 1em 0;
+    flex-grow: 1;
+}
+.tool-card.fullscreen-mode #picked-name {
+    font-size: 10em;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+}
+
+/* Styles for the sequence status when moved to the top in fullscreen mode */
+.tool-card.fullscreen-mode #ir-sequence-status {
+    position: absolute;
+    top: 18px;
+    right: 130px; /* Position it to the left of the exit button */
+    color: #333;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-weight: bold;
+    z-index: 11; /* Make sure it's on top of other content */
+    pointer-events: none; /* It's just for display, not for clicking */
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Fireworks Animation */
+.fireworks-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 2000;
+}
+.firework {
+    position: absolute;
+    opacity: 0;
+    animation: firework-show 2.5s forwards;
+}
+.firework > .particle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: particle-fly 1.8s ease-out forwards;
+    /* Add a glow effect */
+    box-shadow: 0 0 5px currentColor, 0 0 10px currentColor;
+}
+@keyframes firework-show {
+    0%, 100% { opacity: 0; }
+    30%, 80% { opacity: 1; }
+}
+@keyframes particle-fly {
+    0% {
+        transform: translate(0, 0);
+        opacity: 1;
+    }
+    100% {
+        transform: var(--transform-end);
+        opacity: 0;
+    }
+}
+
+/* --- Classroom Timer --- */
+#timer-display {
+    font-size: 4em;
+    font-weight: bold;
+    margin: 0.5em 0;
+}
+.tool-card.fullscreen-mode #timer-display {
+    /* flex-grow: 1; */ /* Removed to prevent pushing controls down */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8em;
+}
+.timer-controls button, .preset-timers button {
+    min-width: 80px;
+}
+#timer-progress-bar {
+    width: 100%;
+    height: 20px;
+    background-color: #e9e9e9;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 1em;
+}
+#timer-progress {
+    width: 100%;
+    height: 100%;
+    background-color: #5cb85c;
+    transition: width 0.5s linear;
+}
+.timer-theme-selector {
+    margin-top: 1em;
+    width: 90%;
+    text-align: right;
+}
+.timer-layout-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-grow: 1; /* Allow this container to fill space in fullscreen */
+}
+.timer-controls-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.tool-card.fullscreen-mode .timer-layout-container.bucket-theme-active {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 2em;
+}
+.timer-visual-container {
+    width: 100%;
+    margin-top: 1em;
+    min-height: 40px;
+}
+.tool-card.fullscreen-mode .timer-visual-container {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.timer-theme {
+    display: none;
+}
+.timer-theme.active {
+    display: block;
+}
+.tool-card.fullscreen-mode .timer-visual-container {
+    width: 100%; /* Ensure this container has width in fullscreen for its children to be visible */
+}
+.tool-card.fullscreen-mode #timer-theme-bar {
+    width: 80%; /* Ensure the bar container has width in fullscreen */
+}
+
+/* Water Bucket Theme */
+.bucket-container {
+    width: 150px;
+    height: 200px;
+    margin: 0 auto;
+    border: 5px solid #8B4513;
+    border-top: none;
+    border-radius: 0 0 20px 20px;
+    position: relative;
+    background-color: #f0e6d2;
+    overflow: hidden;
+}
+.tool-card.fullscreen-mode .timer-layout-container.bucket-theme-active .timer-visual-container {
+    flex-grow: 0; /* Don't let the container grow in side-by-side mode */
+    width: auto; /* Override the default 100% width to allow centering */
+    margin-top: 0; /* Reset margin for better alignment */
+}
+.tool-card.fullscreen-mode .bucket-container {
+    width: 250px;
+    height: 350px;
+}
+.water {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--primary-color);
+    border-radius: 0 0 15px 15px;
+    transition: height 0.5s linear;
+}
+
+/* --- Digital Flashcards --- */
+#flashcard-display-container {
+    width: 90%;
+    /* height: 150px; */ /* REMOVED: No longer using a fixed height */
+    flex-grow: 1; /* ADDED: Allows this element to grow and fill available space */
+    min-height: 200px; /* ADDED: Ensures a good minimum size */
+    margin: 1em 0;
+    position: relative; /* Container for absolute positioning of faces */
+    display: flex; /* ADDED: Needed for its children to be centered properly */
+}
+#flashcard-display {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+.flashcard-face {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 2px dashed var(--primary-color);
+    border-radius: var(--border-radius);
+    display: flex;
+    flex-direction: column; /* To stack image and text */
+    justify-content: center;
+    align-items: center;
+    font-size: 2.5em;
+    font-weight: bold;
+    padding: 10px;
+    text-align: center;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+.flashcard-face.active {
+    opacity: 1;
+    transform: scale(1);
+    z-index: 2; /* Ensure the active card is on top */
+}
+.tool-card.fullscreen-mode #flashcard-display-container {
+    height: 60vh; /* Make flashcard much larger in fullscreen */
+    height: auto; /* Let it grow naturally */
+    flex-grow: 1; /* Allow it to fill available space */
+    font-size: 1.5em;
+}
+#flashcard-display img, .whats-missing-card img {
+    max-width: 100%;
+    max-height: 80%;
+    object-fit: contain;
+    min-height: 0; /* Crucial for allowing images to shrink in a flex container */
+}
+.whats-missing-card span {
+    font-size: 1em;
+}
+.flashcard-controls, .flashcard-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+#flashcard-category {
+    padding: 5px;
+    border-radius: 5px;
+}
+
+/* --- Original Scoreboard Styles (Grid View) --- */
+.scoreboard-grid-view .scoreboard-teams {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin-bottom: 1em;
+    text-align: center;
+    gap: 1em;
+}
+.scoreboard-grid-view .team {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5em;
+}
+.scoreboard-grid-view .team h3 {
+    margin: 0;
+    font-size: 1.1em;
+}
+.scoreboard-grid-view .team-avatar-container {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin-bottom: 0.5em;
+}
+.scoreboard-grid-view .team-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--secondary-color);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    background-color: #e0e0e0;
+}
+.scoreboard-grid-view .avatar-upload-label {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 28px;
+    height: 28px;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    font-size: 0.9em;
+    transition: transform 0.2s;
+}
+.scoreboard-grid-view .avatar-upload-label:hover {
+    transform: scale(1.1);
+}
+.avatar-upload-input {
+    display: none;
+}
+.scoreboard-grid-view .team-score {
+    font-size: 3em;
+    font-weight: bold;
+    margin: 0;
+}
+.scoreboard-grid-view .scoreboard-teams .team:nth-child(1) .team-score { color: var(--team1-color); }
+.scoreboard-grid-view .scoreboard-teams .team:nth-child(2) .team-score { color: var(--team2-color); }
+.scoreboard-grid-view .scoreboard-teams .team:nth-child(3) .team-score { color: var(--team3-color); }
+.scoreboard-grid-view .scoreboard-teams .team:nth-child(4) .team-score { color: var(--team4-color); }
+
+.scoreboard-grid-view .score-controls button {
+    width: 45px;
+    height: 45px;
+    font-size: 1.5em;
+    line-height: 1;
+    padding: 0;
+}
+
+
+/* --- New Themed Scoreboard Styles (Fullscreen View) --- */
+#themed-scoreboard-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.scoreboard-fullscreen-controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+    padding: 10px;
+    background-color: rgba(0,0,0,0.05);
+    border-bottom: 2px solid var(--secondary-color);
+    flex-shrink: 0;
+}
+.sb-control-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+.sb-control-group label {
+    font-weight: bold;
+    color: var(--primary-color);
+}
+.sb-control-group select {
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+#sb-team-count-display {
+    font-weight: bold;
+    font-size: 1.2em;
+    min-width: 2ch;
+    text-align: center;
+}
+#sb-win-score-input {
+    width: 70px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    text-align: center;
+}
+#sb-bonus-btn.active {
+    background-color: var(--team4-color);
+    font-weight: bold;
+}
+#themed-teams-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch; /* Make cards same height */
+    gap: 1.5em;
+    padding: 1.5em;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+/* --- Themed Scoreboard Avatar & Name Styles --- */
+#themed-teams-container .team .team-avatar-container {
+    position: absolute;
+    top: 1em;
+    left: 1em;
+    width: 60px;
+    height: 60px;
+    z-index: 20;
+}
+#themed-teams-container .team .team-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(255,255,255,0.7);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    background-color: #e0e0e0;
+}
+#themed-teams-container .team .avatar-upload-label {
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+    width: 24px;
+    height: 24px;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    font-size: 0.8em;
+    transition: transform 0.2s;
+    color: #333;
+}
+#themed-teams-container .team .avatar-upload-label:hover {
+    transform: scale(1.1);
+}
+
+/* Make name text editable and styled */
+#themed-teams-container .team .name-text {
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+}
+#themed-teams-container .team .name-text:hover {
+    background-color: rgba(0,0,0,0.05);
+}
+#themed-teams-container .team .name-text:focus {
+    background-color: rgba(0,0,0,0.1);
+    outline: 2px solid var(--team-color);
+}
+
+/* Adjust Bonus Input style */
+#sb-bonus-input {
+    width: 60px;
+    text-align: center;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+/* Default Theme Styles for the themed cards */
+#themed-teams-container .team {
+    border: 2px solid #ccc;
+    border-radius: var(--border-radius);
+    padding: 1em;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    width: 320px; /* A bit wider for themes */
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+.team .team-name-display { padding: 0.5em; border-radius: 5px; margin-bottom: 0.5em; }
+.team .name-text { font-size: 1.5em; font-weight: bold; color: var(--primary-color); }
+.team .score-display {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 280px; /* Base height for visuals */
+    position: relative;
+    width: 100%;
+}
+.team .score-number {
+    font-size: 5em;
+    font-weight: bold;
+    color: var(--team-color); /* <--- THE FIX */
+    z-index: 10;
+    position: relative;
+}
+.team .team-controls {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: auto; /* Pushes controls to the bottom */
+    padding-top: 1em;
+    width: 100%;
+    flex-shrink: 0;
+    z-index: 10;
+}
+.team .point-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    font-size: 2.5em;
+    line-height: 1;
+    border: 2px solid;
+    background-color: #fff;
+    transition: transform 0.2s ease;
+}
+.team .point-btn:active {
+    transform: scale(0.9);
+}
+.team .point-btn.plus { color: #5cb85c; border-color: #5cb85c; }
+.team .point-btn.minus { color: #d9534f; border-color: #d9534f; }
+.team .point-btn:hover { background-color: #f4f4f4; }
+
+/* Fullscreen Mode Logic */
+.tool-card.fullscreen-mode .scoreboard-grid-view {
+    display: none;
+}
+.tool-card.fullscreen-mode #themed-scoreboard-container {
+    display: flex;
+}
+
+/* Winner Popup & Confetti */
+#winner-popup {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3000;
+}
+.winner-popup-content {
+    position: relative;
+    background: white;
+    padding: 3em 4em;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    transform: scale(0.5);
+    animation: popup-appear 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+}
+@keyframes popup-appear {
+    to { transform: scale(1); }
+}
+.winner-popup-close {
+    position: absolute;
+    top: 10px; right: 15px;
+    font-size: 1.5em;
+    font-weight: bold;
+    background: none; border: none;
+    color: #888;
+    cursor: pointer;
+}
+#winner-team-name {
+    font-size: 3em;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin: 0;
+}
+
+.winner-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid gold;
+    margin-bottom: 1em;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    background-color: #f0f0f0; /* Fallback color for while image loads */
+}
+/* Hide the image element if it has no src, preventing a broken image icon */
+.winner-avatar[src=""] {
+    display: none;
+}
+
+#confetti-canvas {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 3001;
+}
+
+/* --- What's Missing Game --- */
+#whats-missing-status {
+    font-weight: bold;
+    min-height: 24px;
+    color: #d9534f;
+}
+.whats-missing-grid {
+    display: grid;
+    gap: 10px;
+    width: 100%;
+    min-height: 200px;
+    margin: 1em 0;
+    cursor: pointer;
+    grid-auto-rows: 1fr; /* Ensure all rows are of equal height */
+}
+.tool-card.fullscreen-mode .whats-missing-grid {
+    flex-grow: 1; /* Allow grid to expand vertically */
+}
+.whats-missing-grid.count-4 {
+    grid-template-columns: repeat(2, 1fr);
+}
+.whats-missing-grid.count-6 {
+    grid-template-columns: repeat(3, 1fr);
+}
+.whats-missing-grid.count-9 {
+    grid-template-columns: repeat(3, 1fr);
+}
+.whats-missing-card {
+    border: 2px solid var(--primary-color);
+    border-radius: var(--border-radius);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 10px;
+    font-size: 1.2em;
+    text-align: center;
+    background-color: white;
+    transition: opacity 0.5s, background-color 0.5s, transform 0.5s;
+    overflow: hidden; /* Prevent content from spilling out and affecting layout */
+}
+.wm-settings {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 1em; /* Add space below the controls */
+}
+.whats-missing-card.wm-invisible {
+    /* Makes the card transparent without removing it from the layout */
+    opacity: 0;
+    /* Prevents clicking on the invisible card */
+    pointer-events: none;
+    /* Optional: Adds a subtle shrink effect for a nicer transition */
+    transform: scale(0.95); 
+}
+.whats-missing-card.revealed {
+    background-color: #f0ad4e; /* A highlight color */
+    color: white;
+}
+
+/* --- Image Reveal Game --- */
+.ir-setup-controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 1em;
+    width: 100%;
+}
+.ir-option, .ir-custom-grid-inputs, .ir-custom-speed-input {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.ir-setup-controls select, .ir-setup-controls input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+.ir-custom-grid-inputs input, .ir-custom-speed-input input {
+    width: 70px;
+}
+.ir-game-controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1em;
+}
+.ir-game-area {
+    width: 100%;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+}
+#ir-image-container {
+    position: relative;
+    max-width: 100%;
+    max-height: 100%;
+    margin-bottom: 1em;
+}
+#ir-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    visibility: hidden;
+}
+#ir-grid-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: grid;
+}
+.ir-grid-tile {
+    background-color: var(--primary-color);
+    border: 1px solid white;
+    transition: opacity 0.4s ease-in-out;
+}
+.ir-grid-tile.revealed {
+    opacity: 0;
+    pointer-events: none;
+}
+#ir-status-bar {
+    color: #555;
+    font-weight: bold;
+    min-height: 1.2em;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#ir-sequence-status {
+    color: var(--primary-color);
+}
+.tool-card.fullscreen-mode .ir-game-area {
+    justify-content: center;
+}
+
+/* --- Bingo Picker --- */
+.bingo-controls-panel { width: 100%; text-align: center; flex-shrink: 0; margin-bottom: 1em; }
+.bingo-source-select { margin-bottom: 0.5em; }
+#bingo-list-select { width: 100%; max-width: 400px; padding: 5px; border-radius: 5px; }
+#bingo-list-input { width: 100%; max-width: 400px; height: 100px; margin-bottom: 1em; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+.bingo-buttons { display: flex; gap: 10px; justify-content: center; }
+.bingo-display-area {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    width: 100%;
+    flex-grow: 1;
+    min-height: 0; /* Flexbox fix for the parent container */
+}
+#bingo-picked-item-display {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #5cb85c;
+    text-align: center;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    border: 2px dashed #ccc;
+    border-radius: var(--border-radius);
+    padding: 10px;
+    min-height: 0; 
+}
+/* New wrapper style to contain the image */
+.bingo-image-wrapper {
+    flex-grow: 1;
+    position: relative;
+    width: 100%;
+    min-height: 0; /* Crucial: allows this wrapper to shrink */
+}
+/* Updated image style to be constrained by the wrapper */
+#bingo-picked-item-display img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* This will respect the aspect ratio within the bounds */
+}
+#bingo-picked-item-display div {
+    flex-shrink: 0; /* Prevent the text div from shrinking */
+}
+#bingo-picked-container {
+    border: 2px solid var(--secondary-color);
+    border-radius: var(--border-radius);
+    padding: 1em;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 200px; /* Ensure it has a minimum size */
+}
+#bingo-picked-container h4 { margin: 0 0 0.5em 0; color: var(--primary-color); }
+#bingo-picked-list {
+    padding: 10px;
+    margin: 0;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+    background-color: var(--secondary-color);
+    border-radius: 5px;
+    flex-grow: 1;
+}
+.bingo-picked-card {
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: var(--border-radius);
+    padding: 5px;
+    font-size: 0.9em;
+    text-align: center;
+    word-break: break-word;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+.bingo-picked-card img { height: 60px; max-width: 100%; object-fit: contain; }
+.bingo-picked-card span { font-weight: bold; }
+@media (min-width: 1200px) {
+    .bingo-display-area { flex-direction: row; }
+    #bingo-picked-item-display { font-size: 4em; }
+}
+
+/* --- Flashcard Manager --- */
+.flashcard-manager-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    width: 100%;
+    border-bottom: 2px solid var(--secondary-color);
+    padding-bottom: 1em;
+    margin-bottom: 1em;
+}
+.fm-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap; /* Allows items to wrap on smaller screens */
+}
+.fm-row input, .fm-row select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+.fm-row input[type="text"], .fm-row select {
+    flex-grow: 1;
+}
+#fm-current-cards {
+    width: 100%;
+    min-height: 100px;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: var(--secondary-color);
+}
+.fm-card-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    background-color: white;
+    border-radius: 4px;
+    margin-bottom: 5px;
+}
+.fm-card-item button { font-size: 0.8em; padding: 2px 6px; background-color: #d9534f; }
+
+/* --- Fullscreen Mode --- */
+.fullscreen-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 4px 8px;
+    font-size: 1.2em;
+    line-height: 1;
+    min-width: auto;
+    background-color: rgba(0,0,0,0.05);
+    color: #555;
+    border: 1px solid #ddd;
+    z-index: 10; /* Ensure it's above other card content */
+}
+.fullscreen-btn:hover {
+    background-color: rgba(0,0,0,0.15);
+}
+
+.tool-card.fullscreen-mode .fullscreen-btn {
+    padding: 10px 15px;
+    font-size: 1.1em;
+    font-weight: bold;
+    background-color: rgba(0,0,0,0.1);
+    border: 1px solid #aaa;
+    color: #333;
+    white-space: nowrap; /* Prevent text from wrapping */
+}
+
+.tool-card.fullscreen-mode {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000;
+    margin: 0;
+    border-radius: 0;
+    overflow: hidden; /* Prevent all scrolling in fullscreen */
+    padding: 0; /* Fullscreen card has no padding */
+}
+.tool-card.fullscreen-mode > h2 {
+    display: none; /* Hide title in fullscreen */
+}
+
+body.has-fullscreen-tool {
+    overflow: hidden; /* Hide main page scrollbar */
+}
+body.has-fullscreen-tool header,
+body.has-fullscreen-tool .tool-container > .tool-card:not(.fullscreen-mode) {
+    display: none; /* Hide header and other tools */
+}
+
+/* --- Simple Whiteboard --- */
+.whiteboard-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1em;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.whiteboard-controls label {
+    font-weight: bold;
+}
+.whiteboard-controls button.active {
+    background-color: #1e5a94;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+}
+#whiteboard-canvas {
+    width: 100%;
+    height: 300px; /* Default height */
+    border: 2px solid var(--primary-color);
+    border-radius: var(--border-radius);
+    cursor: crosshair;
+    touch-action: none; /* Prevent scrolling on touch devices while drawing */
+}
+.tool-card.fullscreen-mode #whiteboard-canvas {
+    height: calc(100% - 100px); /* Adjust height in fullscreen */
+    border: none;
+    border-radius: 0;
+}
+.tool-card.fullscreen-mode .whiteboard-controls {
+    padding: 1em;
+    background-color: var(--secondary-color);
+    margin-bottom: 0;
+}
+
+/* --- START: Spinner Module Styles --- */
+
+/* Apply spinner's background only in fullscreen */
+.tool-card.fullscreen-mode#spinner-tool {
+    background: linear-gradient(135deg, #21ffad 0%, #c4fae6 100%);
+    overflow-y: auto; /* Allow scrolling for config panel in fullscreen */
+}
+#spinner-fullscreen-view {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 10px;
+}
+/* Grid view styles */
+#spinner-grid-view .config-section, #spinner-fullscreen-view .config-section {
+    padding: 0;
+    background-color: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    text-align: center;
+    width: 100%;
+    margin: 0;
+}
+#spinner-grid-view .config-section h3 { font-size: 1.2em; color: var(--primary-color); border-bottom: 1px solid #eee; padding-bottom: 8px; margin-bottom: 1em; }
+#spinner-grid-view .config-block { margin-bottom: 1.5em; padding-bottom: 1.5em; border-bottom: 1px dashed #ccc; }
+#spinner-grid-view .config-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+/* Styles from standalone spinner, adapted and prefixed */
+#spinner-fullscreen-view .page-title { font-family: 'Balsamiq Sans', cursive; font-size: 2.6em; color: #ffffff; text-shadow: 2px 2px 0px #f56a79, 4px 4px 0px rgba(0, 0, 0, 0.15); margin-bottom: 15px; text-align: center; padding: 8px 15px; background-color: rgba(255, 255, 255, 0.1); border-radius: 15px; display: inline-block; }
+#spinner-fullscreen-view .page-title .brain, #spinner-fullscreen-view .page-title .power { display: inline-block; font-size: 0.9em; vertical-align: baseline; margin: 0 5px; transform: translateY(-2px); }
+#spinner-fullscreen-view .main-container { display: flex; flex-direction: column; align-items: center; gap: 15px; width: 100%; max-width: 900px; padding-bottom: 0px; }
+#spinner-fullscreen-view .spinner-section { display: flex; flex-direction: column; align-items: center; width: 100%; margin-bottom: 0;}
+#spinner-fullscreen-view .spin-button-top { display: block; margin: 0 auto 0px auto; padding: 10px 5px; width: auto; min-width: 160px; height: auto; border-radius: 50px; background: linear-gradient(180deg, #4ca1af 0%, #2c3e50 100%); color: white; font-size: 22px; font-weight: bold; font-family: 'Balsamiq Sans', cursive; border: 4px solid white; box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25); cursor: pointer; transition: background 0.3s ease, transform 0.1s ease, box-shadow 0.2s ease; text-shadow: 1px 1px 2px rgba(0,0,0,0.4); }
+#spinner-fullscreen-view .spin-button-top:hover { background: linear-gradient(180deg, #5cb6c4 0%, #3a5068 100%); }
+#spinner-fullscreen-view .spin-button-top:active { transform: scale(0.97); }
+#spinner-fullscreen-view .spin-button-top:disabled { background: #bdc3c7; cursor: not-allowed; opacity: 0.6; }
+#spinner-fullscreen-view .spinner-container { position: relative; width: 800px; height: 500px; display: flex; justify-content: center; align-items: center; perspective: 1900px; margin-bottom: 70px; max-width: 90vw; aspect-ratio: 1/1; }
+#spinner-fullscreen-view .spinner-wheel { position: relative; width: 700px; height: 234px; transform-style: preserve-3d; transform: rotateX(-25deg); transition: transform 6s cubic-bezier(0.25, 0.1, 0.25, 1); }
+#spinner-tool { --wheel-height: 170px; --cap-diameter: 540px; --cap-left: 0px; --segment-font-size: 18px; --cap-image: none; }
+#spinner-fullscreen-view .spinner-wheel::before, #spinner-fullscreen-view .spinner-wheel::after { content: ''; position: absolute; width: var(--cap-diameter); height: var(--cap-diameter); left: var(--cap-left); border-radius: 50%; background-color: #e0e0e0; border: 1px solid rgba(0, 0, 0, 0.1); box-shadow: inset 0 0 15px rgba(0,0,0,0.15); background-size: cover; background-position: center center; background-repeat: no-repeat; background-image: var(--cap-image); }
+#spinner-fullscreen-view .spinner-wheel::before { top: 0; transform: rotateX(90deg) translateZ(calc(var(--wheel-height) / 2)); background-color: #f0f0f0; }
+#spinner-fullscreen-view .spinner-wheel::after { bottom: 0; transform: rotateX(-90deg) translateZ(calc(var(--wheel-height) / 2)); background-color: #d0d0d0; }
+#spinner-fullscreen-view .segment { position: absolute; top: 0; left: 50%; height: 100%; transform-origin: center center; transform-style: preserve-3d; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 5px; box-sizing: border-box; font-weight: 600; color: rgba(0, 0, 0, 0.85); border: 1px solid rgba(50, 50, 50, 0.15); overflow: hidden; line-height: 1.1; }
+#spinner-fullscreen-view .segment img { display: block; max-width: 100%; max-height: 85%; object-fit: contain; margin-bottom: 3px; }
+#spinner-fullscreen-view .segment span { display: block; text-align: center; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; user-select: none; transform: translateZ(1px); padding: 0 2px; font-size: var(--segment-font-size); flex-shrink: 0; }
+#spinner-fullscreen-view .segment.winner { filter: brightness(1.1) contrast(1.1); border-color: #ffbf00; border-width: 2px; box-shadow: 0 0 15px rgba(255, 191, 0, 0.6); z-index: 3; }
+#spinner-fullscreen-view .placeholder-segment { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; text-align: center; font-size: 1.4em; color: #666; padding: 20px; background-color: rgba(220, 220, 220, 0.7); border-radius: 10px; z-index: 1; }
+#spinner-fullscreen-view .result-display { margin-top: 5px; margin-bottom: 10px; padding: 15px 30px; background-color: rgba(255, 255, 255, 0.95); border-radius: 15px; font-size: 30px; font-weight: bold; color: #e74c3c; text-align: center; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); min-height: 65px; display: flex; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.5s ease; min-width: 260px; max-width: 90%; }
+#spinner-fullscreen-view .result-display.visible { opacity: 1; }
+#spinner-fullscreen-view .config-section { background-color: rgba(255,255,255,0.9); border-radius: 15px; max-width: 550px; }
+#spinner-fullscreen-view .config-section h2 { font-size: 1.8em; margin-bottom: 25px; color: #444; border-bottom: 1px solid #ddd; padding-bottom: 10px;}
+#spinner-fullscreen-view .config-section h3 { font-size: 1.3em; margin-bottom: 15px; color: #555; margin-top: 0; }
+#spinner-fullscreen-view .config-section h4 { font-size: 1.1em; margin-top: 15px; margin-bottom: 8px; color: #666; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto; }
+#spinner-fullscreen-view .config-block { margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px dashed #ccc; }
+#spinner-fullscreen-view .config-block:last-child { border-bottom: none; }
+.add-word-form { display: flex; gap: 10px; margin-bottom: 10px; align-items: center; justify-content: center; max-width: 450px; margin-left: auto; margin-right: auto; }
+.add-word-form input[type="text"] { flex-grow: 1; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 1em; }
+.add-word-form .upload-button.small-upload-btn { padding: 8px 10px; font-size: 18px; font-weight: normal; background-color: #aab8c2; line-height: 1; margin: 0; }
+.add-word-form .upload-button.small-upload-btn:hover { background-color: #8899a6; }
+.add-word-form button { padding: 10px 15px; background-color: #2ecc71; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 1em; font-weight: bold; transition: background-color 0.2s ease; flex-shrink: 0; margin: 0;}
+.add-word-form button:hover { background-color: #27ae60; }
+.image-preview-area { text-align: center; margin-bottom: 10px; font-size: 0.8em; color: #555; }
+.image-preview-area img { max-width: 40px; max-height: 30px; vertical-align: middle; margin-right: 5px; border-radius: 3px; }
+.word-list { list-style-type: none; padding: 0; margin: 10px auto; max-width: 400px; max-height: 150px; overflow-y: auto; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 5px; }
+.item-list li { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border-bottom: 1px dashed #eee; font-size: 15px; color: #333; text-align: left;}
+.item-list li:last-child { border-bottom: none; }
+.item-list .item-content { display: flex; align-items: center; flex-grow: 1; margin-right: 10px; overflow: hidden; }
+.item-list .item-content img { width: 24px; height: 24px; object-fit: contain; margin-right: 8px; border-radius: 3px; flex-shrink: 0; }
+.item-list .item-content span { flex-grow: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.item-list .item-controls { display: flex; align-items: center; flex-shrink: 0; }
+.item-list .remove-item-image, .item-list .remove-word { cursor: pointer; color: #e74c3c; font-weight: bold; font-size: 18px; padding: 0 5px; border-radius: 4px; transition: background-color 0.2s ease; background: none; border: none; margin-left: 5px; line-height: 1; }
+.item-list .remove-item-image:hover, .item-list .remove-word:hover { background-color: #fdd; }
+#spinner-fullscreen-view .upload-button, #spinner-fullscreen-view .remove-button { display: inline-block; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; transition: background-color 0.2s ease; margin: 5px 0; width: 100%; text-align: center;}
+#spinner-fullscreen-view .upload-button { background-color: #5dade2; color: white; }
+#spinner-fullscreen-view .upload-button:hover { background-color: #3498db; }
+#spinner-fullscreen-view .remove-button { background-color: #e74c3c; color: white; }
+#spinner-fullscreen-view .remove-button:hover { background-color: #c0392b; }
+#spinner-fullscreen-view .font-size-control { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; }
+#spinner-fullscreen-view .font-size-control input[type="range"] { flex-grow: 1; max-width: 200px; }
+#spinner-fullscreen-view .config-management-area { display: flex; flex-direction: column; gap: 10px; max-width: 400px; margin-left: auto; margin-right: auto; }
+#spinner-fullscreen-view .config-management-area input, #spinner-fullscreen-view .config-management-area select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; box-sizing: border-box; }
+#spinner-fullscreen-view .config-management-area .button-group { display: flex; gap: 10px; }
+#spinner-fullscreen-view .config-management-area .button-group button { flex-grow: 1; margin: 0; }
+@media (max-width: 650px) { #spinner-fullscreen-view .spinner-container { width: 90vw; height: auto; } #spinner-fullscreen-view .spinner-wheel { width: 100%; height: 150px; transform: rotateX(-20deg); } #spinner-fullscreen-view .spin-button-top { font-size: 20px; } #spinner-fullscreen-view .page-title { font-size: 2.2em;} #spinner-fullscreen-view .result-display { font-size: 28px; } #spinner-fullscreen-view .config-section { max-width: 90%; padding: 20px; } }
+@media (max-width: 480px) { #spinner-fullscreen-view .spinner-wheel { height: 120px; transform: rotateX(-18deg); } #spinner-fullscreen-view .spin-button-top { font-size: 18px; } #spinner-fullscreen-view .page-title { font-size: 1.8em;} #spinner-fullscreen-view .result-display { font-size: 24px;} }
+
+/* --- END: Spinner Module Styles --- */
+
+/* --- START: 3D Dice Roller Styles --- */
+#dice-roller-tool {
+    /* Allow the canvas to grow and fill the available space */
+    display: flex;
+    flex-direction: column;
+}
+.dice-roller-controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+    margin-bottom: 1em;
+    flex-shrink: 0;
+}
+.dr-control-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+.dr-control-group label {
+    font-weight: bold;
+}
+.dr-control-group select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+#dice-canvas-container {
+    width: 100%;
+    flex-grow: 1; /* This is crucial for the canvas area to fill the card */
+    min-height: 250px;
+    position: relative;
+    border: 1px solid var(--secondary-color);
+    border-radius: var(--border-radius);
+    overflow: hidden; /* Ensures the canvas stays within the rounded corners */
+}
+#dice-canvas-container canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+#dice-result-popup {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+.dice-result-content {
+    background-color: white;
+    padding: 2em 3em;
+    border-radius: var(--border-radius);
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    animation: popup-appear 0.3s ease-out forwards; /* Using existing popup animation */
+}
+.dice-result-content h3 {
+    margin-top: 0;
+    color: var(--primary-color);
+}
+#dice-result-total {
+    font-size: 4em;
+    font-weight: bold;
+    color: var(--team2-color); /* Red for emphasis */
+    margin: 0.2em 0;
+}
+/* --- END: 3D Dice Roller Styles --- */
+
+/* --- Audio Controls --- */
+#mute-btn {
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    font-size: 1.5em;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    line-height: 1;
+    color: #888;
+    margin: 0; /* Override default button margin */
+}
+#mute-btn:hover {
+    color: var(--primary-color);
+    background: none; /* Override generic button hover */
+}
+
+
+/* --- Date & Weather --- */
+.dw-main-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 1.5em;
+}
+.dw-left-panel, .dw-right-panel {
+    width: 100%;
+}
+.dw-calendar-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1em;
+}
+#dw-calendar-header {
+    color: var(--primary-color);
+    margin: 0;
+    font-size: 1.2em;
+}
+#dw-prev-month-btn, #dw-next-month-btn {
+    padding: 4px 12px;
+}
+#dw-calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    text-align: center;
+}
+.dw-day-name, .dw-date-cell {
+    padding: 8px 0;
+    font-weight: bold;
+    border-radius: 4px;
+}
+.dw-day-name {
+    color: #666;
+    font-size: 0.9em;
+}
+.dw-date-cell {
+    background-color: var(--secondary-color);
+    cursor: pointer;
+    transition: background-color 0.2s, box-shadow 0.2s;
+}
+.dw-date-cell:not(.empty):hover {
+    background-color: #d4e3f3;
+}
+.dw-date-cell.empty {
+    background-color: transparent;
+    cursor: default;
+}
+.dw-date-cell.current-day {
+    background-color: var(--team4-color); /* Orange/Yellow */
+    color: white;
+}
+.dw-date-cell.selected-day {
+    background-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 0 0 2px white, 0 0 0 4px var(--primary-color);
+    transform: scale(1.05);
+}
+.dw-right-panel {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Hide large date text in grid view */
+#date-weather-tool:not(.fullscreen-mode) #dw-month-display,
+#date-weather-tool:not(.fullscreen-mode) .dw-day-date-row {
+    display: none;
+}
+
+#dw-month-display {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+.dw-day-date-row {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    gap: 1em;
+    margin: 0.5em 0;
+}
+#dw-day-display {
+    font-size: 2em;
+    color: #555;
+}
+#dw-date-display {
+    font-size: 3.5em;
+    font-weight: bold;
+    color: var(--team2-color); /* Red */
+}
+#dw-date-display sup {
+    font-size: 0.5em;
+    vertical-align: super;
+}
+/* New cute time display style */
+#dw-time-display {
+    font-size: 1.5em;
+    font-family: 'Courier New', Courier, monospace;
+    background-color: white;
+    color: var(--primary-color);
+    padding: 8px 15px;
+    border-radius: 5px;
+    border: 2px solid var(--primary-color);
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    display: inline-block;
+}
+
+.dw-time-weather-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2em;
+    width: 100%;
+    margin-top: 1em;
+}
+
+#dw-weather-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5em;
+}
+.dw-weather-controls {
+    margin-bottom: 0.5em;
+}
+.dw-weather-controls select {
+    padding: 5px;
+    border-radius: 5px;
+}
+#dw-weather-img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+}
+#dw-weather-text {
+    font-size: 1.1em;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+/* Fullscreen Date & Weather */
+.tool-card.fullscreen-mode#date-weather-tool .dw-main-content {
+    flex-direction: row;
+    height: 100%;
+    padding: 2em;
+    align-items: stretch;
+}
+.tool-card.fullscreen-mode#date-weather-tool {
+    padding: 0; /* Remove padding from the card itself */
+}
+.tool-card.fullscreen-mode#date-weather-tool .dw-left-panel {
+    flex: 1 1 45%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+}
+#dw-calendar-grid {
+    flex-grow: 1; /* Allow calendar to expand */
+}
+.tool-card.fullscreen-mode#date-weather-tool .dw-right-panel {
+    flex: 1 1 55%;
+    justify-content: center;
+    height: 100%;
+}
+.tool-card.fullscreen-mode #dw-month-display {
+    font-size: 7em;
+}
+.tool-card.fullscreen-mode #dw-day-display {
+    font-size: 6em;
+}
+.tool-card.fullscreen-mode #dw-date-display {
+    font-size: 8em;
+}
+.tool-card.fullscreen-mode #dw-time-display {
+    font-size: 4em;
+    padding: 10px 25px;
+}
+.tool-card.fullscreen-mode #dw-weather-img {
+    width: 250px;
+    height: 250px;
+}
+.tool-card.fullscreen-mode #dw-weather-text {
+    font-size: 3em;
+}
